@@ -1,0 +1,69 @@
+using namespace std;
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <vector>
+#include<bits/stdc++.h>
+#include <algorithm>
+#include <map>
+void phishing(string fileName){
+   string list[30][2]{
+       "microsoft","2","password","3","username","3","some questions","1","instagram","1","facebook","1",
+       "twitter","1","reddit","3","security alert","3","expired","3","renewal","2","attention","2","follow this link"
+       ,"5","follow link","3","link","2","your attention","2","update your account","2","update your information","3"
+       ,"click link","3","attention","1","paypal","1","wont take long","1","payment","2","sign in","3"
+       ,"login credentials","4","sensitive","2","credit card","3","mastercard","2","urgent","3","click the link"
+       ,"3"
+   };
+   int total = 0;
+   vector <string> wordsFound ;
+    ifstream inputFile;
+    inputFile.open(fileName);
+    if (!inputFile.is_open()) {
+        cerr << "Error opening the file!" << endl;
+    }
+    string line;
+   while (inputFile.good()) {
+        getline(inputFile,line);
+        transform(line.begin(), line.end(), line.begin(), ::tolower);
+        for (int i = 0; i < 30; ++i) {
+            if (line.find(list[i][0]) != string::npos){
+                total += stoi(list[i][1]);
+                wordsFound.push_back(list[i][0]);
+
+            }
+        }
+    }
+    vector <int> numberOfOcc;
+   vector <int> postion;
+    for (int i = 0; i < wordsFound.size(); ++i) {
+        int counter =0;
+        for (int j = 0; j < wordsFound.size(); ++j) {
+            if(wordsFound[i]==wordsFound[j]){
+                counter += 1;
+            }
+
+        }
+
+        numberOfOcc.push_back(counter);
+    }
+    map<string, int> mp;
+    for (int i = 0; i < wordsFound.size(); ++i) {
+        mp[wordsFound[i]]= numberOfOcc[i];
+    }
+    sort(wordsFound.begin(), wordsFound.end());
+    auto it
+            = unique(wordsFound.begin(), wordsFound.end());
+    wordsFound.erase(it, wordsFound.end());
+    for (int i = 0; i < wordsFound.size(); ++i) {
+        cout<<"word found: "<<wordsFound[i]<<":"<<mp.at(wordsFound[i])<<endl;
+    }
+    cout<<"total points: "<<total<<endl;
+    // Close the file
+    inputFile.close();
+
+}
+
+int main(){
+    phishing("ay7aga");
+}
